@@ -1,6 +1,10 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import stripeClient from '../client';
+
+import CartContext from '../globalState';
+import { persistCartInLocalStorage } from '../helpers';
 
 export const getStaticProps = async () => {
   const { data: products } = await stripeClient.products.list({
@@ -22,7 +26,12 @@ const Home = ({
   products
 }) => {
   const numberOfProducts = products.length;
-
+  const { cart, dispatch } = useContext(CartContext);
+  const addToCart = () => {
+    // create a session then init the cart in local storage & globalState
+    persistCartInLocalStorage({ id: '123' });
+    // dispatch({ type: 'INIT_CART', })
+  }
   return (
     <div className="container mx-auto w-full">
       <Head>
@@ -31,6 +40,7 @@ const Home = ({
       </Head>
       <header>
         <h1 className="title text-2xl w-full text-center">NextJS and Tailwind Starter</h1>
+        <button onClick={addToCart}>Test</button>
       </header>
       <main className="my-5 flex flex-col justify-center items-center">
         <span>
